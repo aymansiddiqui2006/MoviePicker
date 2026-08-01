@@ -1,22 +1,27 @@
 import mongoose, { Schema } from "mongoose";
 import { Room } from "./Room.model";
 
-const ParticipantSchema=mongoose.Schema({
-    nickname:{
-        type:String,
-        require:true,
+const ParticipantSchema = mongoose.Schema(
+  {
+    nickname: {
+      type: String,
+      required: true,
     },
-    RoomCode:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Room",
-        require:true,
+    room: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Room",
+      required: true,
     },
-    status:{
-        type:Boolean,
-        default:false,
+    ready: {
+      type: Boolean,
+      default: false,
+    },
+    hasVoted: {
+      type :Boolean,
+      default:false
     }
-},
-{timestamps:true}
-)
+  },
+  { timestamps: true },
+);
 
-export const Participant=mongoose.model("Participant",ParticipantSchema)
+export const Participant = mongoose.model("Participant", ParticipantSchema);

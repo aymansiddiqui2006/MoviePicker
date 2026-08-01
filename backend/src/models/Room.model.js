@@ -2,19 +2,36 @@ import mongoose, { Schema } from "mongoose";
 
 const RoomSchema = mongoose.Schema(
   {
-    RoomCode:{
-        type:String,
-        unique:true,
-        require:true,
+    roomCode: {
+      type: String,
+      unique: true,
+      required: true,
     },
-    createdBy: {
+    roomName: {
+      type: String,
+      default: "Movie Night",
+    },
+    status: {
+      type: String,
+      enum: ["waiting", "adding_movies", "voting", "finished"],
+      default: "waiting",
+    },
+    host: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Participant",
-      require: true,
+      required: true,
+    },
+    members: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Participant",
+      },
+    ],
+    expiresAt: {
+      type: Date,
     },
   },
   { timestamps: true },
 );
 
-
-export const Room=mongoose.model("Room",RoomSchema)
+export const Room = mongoose.model("Room", RoomSchema);
