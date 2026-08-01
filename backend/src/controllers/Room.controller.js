@@ -86,11 +86,62 @@ const getRoom = AsyncHandler(async (req, res) => {
     .populate("host", "nickname ready")
     .populate("members", "nickname ready hasVoted");
 
-  if(!room){
+  if (!room) {
     throw new ApiError(404, "room not fethed");
-  }  
+  }
 
-  return res.status(200).json(new ApiRes(200,room,"room fetched!!"))
+  return res.status(200).json(new ApiRes(200, room, "room fetched!!"));
 });
 
-export { CreateRoom, JoinRoom,getRoom };
+const readyToAddMovie = AsyncHandler(async (req, res) => {
+  const { roomCode, nickname } = req.params;
+
+  const room = await Room.findOne({
+    roomCode,
+  });
+
+  if (!room) {
+    throw new ApiError(409, "Room does not exits!");
+  }
+
+  const participant = await Participant.findOne({
+    room: room._id,
+    nickname,
+  });
+
+  if (!participant) {
+    throw new ApiError(404, "Participant not found");
+  }
+
+  participant.ready = true;
+  await participant.save();
+
+  const participants = await Participant.find({
+    room: room._id,
+  });
+
+  const CheckEveryoneIsReady = await participants.every(
+    (participant) => participant.ready,
+  );
+
+  if (CheckEveryoneIsReady) {
+    room.status = "adding_movies";
+    await room.save();
+  }
+
+  room.status = "adding_movies";
+  await room.save();
+
+  return res.status(200).json(
+    new ApiRes(
+      200,
+      {
+        participant,
+        roomStatus: room.status,
+      },
+      "Ready status updated",
+    ),
+  );
+});
+
+export { CreateRoom, JoinRoom, getRoom, readyToAddMovie };
