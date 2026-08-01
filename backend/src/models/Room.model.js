@@ -19,7 +19,6 @@ const RoomSchema = mongoose.Schema(
     host: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Participant",
-      required: true,
     },
     members: [
       {
@@ -29,6 +28,7 @@ const RoomSchema = mongoose.Schema(
     ],
     expiresAt: {
       type: Date,
+      default: () => new Date(Date.now() + 60 * 60 * 1000),
     },
   },
   { timestamps: true },

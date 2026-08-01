@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { Room } from "./Room.model";
+import { Room } from "./Room.model.js";
 
 const ParticipantSchema = mongoose.Schema(
   {
