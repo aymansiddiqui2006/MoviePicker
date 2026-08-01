@@ -3,6 +3,7 @@ import ApiRes from "../utils/ApiRes.js";
 import AsyncHandler from "../utils/AsyncHandler.js";
 import { Room } from "../models/Room.model.js";
 import { Participant } from "../models/Participant.model.js";
+import { Movie } from "../models/Movie.model.js";
 
 const CreateRoom = AsyncHandler(async (req, res) => {
   const { roomName, nickname } = req.body;
@@ -129,9 +130,6 @@ const readyToAddMovie = AsyncHandler(async (req, res) => {
     await room.save();
   }
 
-  room.status = "adding_movies";
-  await room.save();
-
   return res.status(200).json(
     new ApiRes(
       200,
@@ -144,4 +142,102 @@ const readyToAddMovie = AsyncHandler(async (req, res) => {
   );
 });
 
-export { CreateRoom, JoinRoom, getRoom, readyToAddMovie };
+const VotingStarted = AsyncHandler(async (req, res) => {
+  const { roomCode, nickname } = req.params;
+
+  const findRoom = await Room.findOne({ roomCode });
+  if (!findRoom) {
+    throw new ApiError(404, "room not exists");
+  }
+
+  const participant = await Participant.findOne({
+    nickname,
+    room: findRoom._id,
+  });
+
+  if (!participant) {
+    throw new ApiError(404, "participant not exits");
+  }
+
+  if (findRoom.host.toString() !== participant._id.toString()) {
+    throw new ApiError(403, "Only the host can start voting");
+  }
+
+  if (findRoom.status !== "adding_movies") {
+    throw new ApiError(400, "Room is not ready for voting");
+  }
+
+  findRoom.status = "voting";
+  await findRoom.save();
+
+  return res.status(200).json(new ApiRes(200, findRoom, "status updated!"));
+});
+
+const WinningCountStart = AsyncHandler(async (req, res) => {
+  const { roomCode, nickname } = req.params;
+
+  // Find Room
+  const room = await Room.findOne({ roomCode });
+
+  if (!room) {
+    throw new ApiError(404, "Room not found");
+  }
+
+  // Check participant
+  const participant = await Participant.findOne({
+    nickname,
+    room: room._id,
+  });
+
+  if (!participant) {
+    throw new ApiError(404, "Participant not found");
+  }
+
+  // Only host can finish voting
+  if (room.host.toString() !== participant._id.toString()) {
+    throw new ApiError(403, "Only host can finish voting");
+  }
+
+  // Room must be in voting state
+  if (room.status !== "voting") {
+    throw new ApiError(400, "Voting has not started");
+  }
+
+  // Find all movies sorted by votes
+  const movies = await Movie.find({
+    room: room._id,
+  }).sort({ votes: -1 });
+
+  if (movies.length === 0) {
+    throw new ApiError(404, "No movies found");
+  }
+
+  // Highest voted movie
+  const highestVotes = movies[0].votes;
+
+  // Check for tie
+  const winners = movies.filter((movie) => movie.votes === highestVotes);
+
+  // Finish room
+  room.status = "finished";
+  await room.save();
+
+  return res.status(200).json(
+    new ApiRes(
+      200,
+      {
+        winner: winners,
+      },
+      "Voting finished successfully",
+    ),
+  );
+});
+
+export {
+  CreateRoom,
+  JoinRoom,
+  getRoom,
+  readyToAddMovie,
+  VotingStarted,
+  WinningCountStart,
+};

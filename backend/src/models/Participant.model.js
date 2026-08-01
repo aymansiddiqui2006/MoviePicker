@@ -17,9 +17,9 @@ const ParticipantSchema = mongoose.Schema(
       default: false,
     },
     hasVoted: {
-      type :Boolean,
-      default:false
-    }
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true },
 );

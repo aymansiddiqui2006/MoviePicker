@@ -8,6 +8,6 @@ app.use(express.json());
 
 app.use("/api/v1/room",roomRouter)
 
-app.use("api/v1/movie",movieRouter)
+app.use("/api/v1/movie",movieRouter)
 
 export default app;
