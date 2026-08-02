@@ -3,13 +3,18 @@ import RoomContext from "./RoomContext";
 
 const RoomContextProvider = ({ children }) => {
 
-    const [roomCode, setRoomCode] = useState(() => {
-        const code = localStorage.getItem("roomCode");
-        return code ? JSON.parse(code) : null;
+    const [roomCode, setroomCode] = useState(() => {
+        const code = localStorage.getItem("roomCode") || "";
+        return code;
+    });
+
+    const [nickname, setnickname] = useState(() => {
+        const code = localStorage.getItem("nickname") || "";
+        return code;
     });
 
     return (
-        <RoomContext.Provider value={{roomCode, setRoomCode}} >
+        <RoomContext.Provider value={{ roomCode, setroomCode, nickname, setnickname}} >
             {children}
         </RoomContext.Provider>
     )
