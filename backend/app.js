@@ -1,13 +1,31 @@
 import express from "express";
-import roomRouter from "./src/routes/Room.route.js"
-import movieRouter from "./src/routes/movie.router.js"
+import cors from "cors";
 
-const app=express();
+import roomRouter from "./src/routes/Room.route.js";
+import movieRouter from "./src/routes/movie.router.js";
 
-app.use(express.json()); 
+const app = express();
 
-app.use("/api/v1/room",roomRouter)
+app.use(express.json());
 
-app.use("/api/v1/movie",movieRouter)
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
+
+app.use("/api/v1/room", roomRouter);
+
+app.use("/api/v1/movie", movieRouter);
+
+app.use((err, req, res, next) => {
+  res.status(err.statusCode || 500).json({
+    success: false,
+    message: err.message || "Internal Server Error",
+  });
+});
 
 export default app;
