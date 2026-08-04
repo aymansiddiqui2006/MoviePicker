@@ -2,8 +2,10 @@ import React, { useContext } from 'react'
 import { RxCross2 } from "react-icons/rx";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import api from "../utils/apiInstance"
-import {ApiPaths} from "../utils/apiPaths"
+import { ApiPaths } from "../utils/apiPaths"
 import RoomContext from '../context/RoomContext';
+
+import no_image from "../assets/no_image.png"
 
 import toast from 'react-hot-toast';
 
@@ -20,11 +22,11 @@ function Modal({ isClose, movie }) {
                 poster: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
                 title: movie.original_title
             }
-            const res = await api.post(ApiPaths.MOVIE.ADD_MOVIE(roomCode, nickname),data);
+            const res = await api.post(ApiPaths.MOVIE.ADD_MOVIE(roomCode, nickname), data);
             toast.success("movie Added")
         } catch (error) {
             toast.error(error?.response?.data?.message || "Something went wrong")
-        }finally{
+        } finally {
             isClose()
         }
     }
@@ -39,7 +41,7 @@ function Modal({ isClose, movie }) {
                         src={
                             movie.poster_path
                                 ? `https://image.tmdb.org/t/p/w500${movie.backdrop_path}`
-                                : "/no-image.png"
+                                : no_image
                         }
                         alt={movie.original_title} className='object-cover h-full w-full lg:h-72' >
                     </img>

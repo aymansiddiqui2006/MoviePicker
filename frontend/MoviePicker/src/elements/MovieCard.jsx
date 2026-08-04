@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import no_image from "../assets/no_image.png"
+
 
 
 function MovieCard({ title, endpoint, onMovieClick }) {
@@ -41,7 +43,8 @@ function MovieCard({ title, endpoint, onMovieClick }) {
                                 src={
                                     movie.poster_path
                                         ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-                                        : "/no-image.png"
+                                        : no_image
+                            
                                 }
                                 alt={movie.original_title} className='object-fill h-full w-full' >
                             </img>
