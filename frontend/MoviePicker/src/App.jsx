@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Room from "./components/Room.jsx";
 import Movie from "./components/Movie.jsx";
+import Vote from "./components/Vote.jsx";
 
 const route = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const route = createBrowserRouter([
   {
     path: "/movie",
     element: <Movie />
+  },
+  {
+    path: "/vote",
+    element: <Vote />
   }
 ])
 
