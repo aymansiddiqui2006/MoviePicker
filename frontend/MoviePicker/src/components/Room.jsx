@@ -17,7 +17,8 @@ function Room() {
     const [members, setMembers] = useState([]);
     const [host, setHost] = useState("");
     const [roomStatus, setRoomStatus] = useState("waiting")
-    const { roomCode, nickname } = useContext(RoomContext)
+    
+    const { roomCode, nickname, setIsHost } = useContext(RoomContext)
 
     const fetchRoom = async () => {
         try {
@@ -27,6 +28,8 @@ function Room() {
             setMembers(res?.data?.data?.members);
             setHost(res?.data?.data?.host);
             setRoomStatus(res?.data?.data?.status)
+
+            setIsHost(res.data.data.host.nickname === nickname);
 
         } catch (error) {
             toast.error(
@@ -49,6 +52,9 @@ function Room() {
     useEffect(() => {
         if (roomStatus === "adding_movies") {
             navigate("/movie", { replace: true });
+        }
+        if (roomStatus === "voting") {
+            navigate("/vote", { replace: true });
         }
     }, [roomStatus, navigate]);
 

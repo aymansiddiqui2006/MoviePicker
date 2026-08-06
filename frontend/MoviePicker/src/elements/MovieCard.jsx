@@ -33,7 +33,7 @@ function MovieCard({ title, endpoint, onMovieClick }) {
 
 
     return (
-        <div className='bg-white/25 backdrop-blur-2xl py-2 px-3 lg:px-5 rounded-xl flex flex-col shadow-md shadow-gray-700 border-2 border-gray-300'>
+        <div className='bg-gray-200/20 backdrop-blur-sm py-2 px-3 lg:px-5 rounded-xl flex flex-col shadow-md shadow-gray-700 border-2 border-gray-300'>
             <h1 className='text-2xl font-bold'>{title}</h1>
             <div className='flex gap-4 overflow-x-scroll scrollbar-none mt-2 px-1 py-2 '>
                 {

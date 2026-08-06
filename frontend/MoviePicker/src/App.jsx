@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Room from "./components/Room.jsx";
 import Movie from "./components/Movie.jsx";
 import Vote from "./components/Vote.jsx";
+import Result from "./components/Result.jsx";
 
 const route = createBrowserRouter([
   {
@@ -22,6 +23,10 @@ const route = createBrowserRouter([
   {
     path: "/vote",
     element: <Vote />
+  },
+  {
+    path: "/result",
+    element: <Result />
   }
 ])
 

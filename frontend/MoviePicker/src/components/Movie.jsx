@@ -1,9 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import MovieCard from '../elements/MovieCard';
 import Modal from '../elements/Modal';
 import no_image from "../assets/no_image.png"
+import { useNavigate } from "react-router-dom";
 
 import { FaSearch } from "react-icons/fa";
+import RoomContext from '../context/RoomContext';
+
+import api from "../utils/apiInstance";
+import { ApiPaths } from "../utils/apiPaths";
+import toast from "react-hot-toast";
 
 function Movie() {
   const [selectMovie, setSelectMovie] = useState(null);
@@ -11,6 +17,10 @@ function Movie() {
   const [search, setSearch] = useState("");
   const [searchedMovie, setSearchedMovie] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const [roomStatus, setRoomStatus] = useState("");
+
+  const { roomCode, nickname, isHost } = useContext(RoomContext);
 
   const options = {
     method: "GET",
@@ -50,24 +60,76 @@ function Movie() {
     return () => clearTimeout(timer);
   }, [search]);
 
+
+  useEffect(() => {
+    const fetchRoom = async () => {
+      try {
+        const res = await api.get(ApiPaths.ROOM.GET_ROOM(roomCode));
+        setRoomStatus(res.data.data.status);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchRoom();
+
+    const interval = setInterval(fetchRoom, 2000);
+
+    return () => clearInterval(interval);
+  }, [roomCode]);
+
+  const handleStartVoting = async () => {
+    try {
+      const res = await api.patch(
+        ApiPaths.ROOM.VOTING_STARTED(roomCode, nickname)
+      );
+
+      setRoomStatus(res.data.data.status);
+
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Something went wrong"
+      );
+    }
+  };
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (roomStatus === "voting") {
+      navigate("/vote");
+    }
+  }, [roomStatus, navigate]);
+
   return (
-    <div className="p-2 flex flex-col gap-6">
+    <div className="p-2 lg:px-8 flex flex-col gap-6">
 
       {/* Search Bar */}
-      <div className="flex justify-center">
-        <div className="flex items-center bg-white rounded-2xl px-2 h-10 lg:w-80">
+      <div className="flex justify-between items-center mb-6  mt-7 lg:px-3">
 
+        <div className="flex items-center bg-white rounded-2xl px-2 h-10 lg:w-80">
           <input
             type="text"
-            placeholder="Search movies..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="flex-1 py-1.5 px-2.5 font-medium outline-none"
+            placeholder="Search movies..."
+            className="flex-1 px-2 outline-none"
           />
-
-          <FaSearch className="text-xl" />
+          <FaSearch />
         </div>
+
+        {isHost && roomStatus === "adding_movies" && (
+          <button
+            onClick={handleStartVoting}
+            className="bg-yellow-500 hover:bg-yellow-600 text-black px-5 py-2 rounded-xl font-semibold"
+          >
+            Start Voting
+          </button>
+        )}
+
       </div>
+
+
 
       {/* Search Results */}
       {search.trim() ? (
@@ -89,7 +151,11 @@ function Movie() {
                   className="cursor-pointer hover:scale-105 transition duration-300"
                 >
                   <img
-                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}` || no_image}
+                    src={
+                      movie.poster_path
+                        ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+                        : no_image
+                    }
                     alt={movie.title}
                     className="w-full h-72 object-cover rounded-xl"
                   />

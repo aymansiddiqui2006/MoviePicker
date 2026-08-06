@@ -13,8 +13,14 @@ const RoomContextProvider = ({ children }) => {
         return code;
     });
 
+
+    const [isHost, setIsHost] = useState(false);
+
     return (
-        <RoomContext.Provider value={{ roomCode, setroomCode, nickname, setnickname}} >
+        <RoomContext.Provider value={{
+            roomCode, setroomCode, nickname, setnickname, isHost,
+            setIsHost,
+        }} >
             {children}
         </RoomContext.Provider>
     )

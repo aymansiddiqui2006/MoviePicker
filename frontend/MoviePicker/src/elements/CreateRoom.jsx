@@ -1,4 +1,4 @@
-import React, { useState ,useContext} from 'react'
+import React, { useState, useContext } from 'react'
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
 
@@ -12,7 +12,7 @@ import { ApiPaths } from '../utils/apiPaths.js';
 function CreateRoom() {
 
     const navigate = useNavigate();
-    const {setroomCode,setnickname,setroomname}=useContext(RoomContext)
+    const { setroomCode, setnickname, setroomname, setIsHost } = useContext(RoomContext)
 
     const [roomName, setRoomName] = useState("");
     const [nickname, setNickename] = useState("");
@@ -38,7 +38,7 @@ function CreateRoom() {
 
             const res = await api.post(ApiPaths.ROOM.CREATE_ROOM, data);
 
-            const createRoomCode=res.data.data.roomCode
+            const createRoomCode = res.data.data.roomCode
 
             setRoomCode(createRoomCode);
 
@@ -47,14 +47,16 @@ function CreateRoom() {
             setRoomName("");
             setNickename("");
 
-            localStorage.setItem("roomCode",createRoomCode);
-            localStorage.setItem("nickname",nickname);
+            localStorage.setItem("roomCode", createRoomCode);
+            localStorage.setItem("nickname", nickname);
 
             setroomCode(createRoomCode);
             setnickname(nickname);
             setroomname(roomName);
-            
-            
+
+            setIsHost(true);
+
+
         } catch (error) {
             toast.error(
                 error?.response?.data?.message || "Something went wrong"
