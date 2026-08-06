@@ -44,6 +44,10 @@ const AddMovies = AsyncHandler(async (req, res) => {
     throw new ApiError(409, "Movie already added");
   }
 
+  if (participant.moviesSelected.length >= 2) {
+    throw new ApiError(400, "You can only add 2 movies");
+  }
+
   const addMovie = await Movie.create({
     room: room._id,
     addedBy: participant._id,
@@ -51,6 +55,9 @@ const AddMovies = AsyncHandler(async (req, res) => {
     poster,
     title,
   });
+
+  participant.moviesSelected.push(addMovie._id);
+  await participant.save();
 
   return res
     .status(201)
@@ -120,20 +127,21 @@ const VoteMovie = AsyncHandler(async (req, res) => {
   participant.hasVoted = true;
   await participant.save();
 
-  return res.status(200).json(new ApiRes(200,movie,"Vote submitted successfully"));
+  return res
+    .status(200)
+    .json(new ApiRes(200, movie, "Vote submitted successfully"));
 });
 
-const WinningMovie = AsyncHandler(async(req,res)=>{
-    const {roomCode}=req.params;
+const WinningMovie = AsyncHandler(async (req, res) => {
+  const { roomCode } = req.params;
 
-    const room = await Room.findOne({
+  const room = await Room.findOne({
     roomCode,
   });
 
   if (!room) {
     throw new ApiError(409, "Room not exits");
   }
-
-})
+});
 
 export { AddMovies, GetMovie, VoteMovie };
