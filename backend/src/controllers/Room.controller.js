@@ -199,38 +199,12 @@ const WinningCountStart = AsyncHandler(async (req, res) => {
   }
 
   // Room must be in voting state
-  if (room.status !== "voting") {
-    throw new ApiError(400, "Voting has not started");
-  }
-
-  // Find all movies sorted by votes
-  const movies = await Movie.find({
-    room: room._id,
-  }).sort({ votes: -1 });
-
-  if (movies.length === 0) {
-    throw new ApiError(404, "No movies found");
-  }
-
-  // Highest voted movie
-  const highestVotes = movies[0].votes;
-
-  // Check for tie
-  const winners = movies.filter((movie) => movie.votes === highestVotes);
-
-  // Finish room
-  room.status = "finished";
+  room.status = "counting_vote";
   await room.save();
 
-  return res.status(200).json(
-    new ApiRes(
-      200,
-      {
-        winner: winners,
-      },
-      "Voting finished successfully",
-    ),
-  );
+  return res
+    .status(200)
+    .json(new ApiRes(200, room, "Voting finished successfully"));
 });
 
 export {

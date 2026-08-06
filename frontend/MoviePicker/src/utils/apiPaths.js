@@ -12,5 +12,6 @@ export const ApiPaths={
      ADD_MOVIE:(roomCode,nickname)=>`/movie/${roomCode}/${nickname}/add`,
      VOTE_MOVIE:(roomCode,tmdbId,nickname)=>`/movie/${roomCode}/${tmdbId}/${nickname}`,
      GET_MOVIES:(roomCode)=>`/movie/${roomCode}/movies`,
+     WINNING_MOVIE:(roomCode)=>`/movie/${roomCode}`,
    }
 }

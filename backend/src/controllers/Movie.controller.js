@@ -135,13 +135,46 @@ const VoteMovie = AsyncHandler(async (req, res) => {
 const WinningMovie = AsyncHandler(async (req, res) => {
   const { roomCode } = req.params;
 
-  const room = await Room.findOne({
-    roomCode,
-  });
+  // Find Room
+  const room = await Room.findOne({ roomCode });
 
   if (!room) {
-    throw new ApiError(409, "Room not exits");
+    throw new ApiError(404, "Room not found");
   }
+
+  if (room.status !== "counting_vote") {
+    throw new ApiError(400, "counting has not started");
+  }
+
+  // Find all movies sorted by votes
+  const movies = await Movie.find({
+    room: room._id,
+  }).sort({ votes: -1 });
+
+  if (movies.length === 0) {
+    throw new ApiError(404, "No movies found");
+  }
+
+  // Highest voted movie
+  const highestVotes = movies[0].votes;
+
+  // Check for tie
+  const winners = movies.filter((movie) => movie.votes === highestVotes);
+
+  // Finish room
+  room.status = "finished";
+  await room.save();
+
+  return res.status(200).json(
+    new ApiRes(
+      200,
+      {
+        winner: winners,
+        status: room.status,
+      },
+      "Voting finished successfully",
+    ),
+  );
 });
 
-export { AddMovies, GetMovie, VoteMovie };
+export { AddMovies, GetMovie, VoteMovie, WinningMovie };
