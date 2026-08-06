@@ -1,6 +1,10 @@
 @import "tailwindcss";
 
 body{
-  background-color: rgb(91, 91, 91);
-  margin: 0;
+  background:linear-gradient(rgba(0, 0, 0, 0.755), rgba(0, 0, 0, 0.903)),url('./assets/bg.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  margin: 0;;
 }
