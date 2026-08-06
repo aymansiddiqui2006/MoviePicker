@@ -161,16 +161,12 @@ const WinningMovie = AsyncHandler(async (req, res) => {
   // Check for tie
   const winners = movies.filter((movie) => movie.votes === highestVotes);
 
-  // Finish room
-  room.status = "finished";
-  await room.save();
 
   return res.status(200).json(
     new ApiRes(
       200,
       {
-        winner: winners,
-        status: room.status,
+        winner: winners
       },
       "Voting finished successfully",
     ),
