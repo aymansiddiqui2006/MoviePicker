@@ -20,6 +20,10 @@ const ParticipantSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    readyToVote: {
+      type: Boolean,
+      default: false,
+    },
     moviesSelected: [
       {
         type: mongoose.Schema.Types.ObjectId,

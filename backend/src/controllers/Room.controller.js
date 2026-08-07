@@ -85,7 +85,7 @@ const getRoom = AsyncHandler(async (req, res) => {
     roomCode,
   })
     .populate("host", "nickname ready")
-    .populate("members", "nickname ready hasVoted");
+    .populate("members", "nickname ready hasVoted readyToVote moviesSelected");
 
   if (!room) {
     throw new ApiError(404, "room not fethed");
@@ -207,6 +207,36 @@ const WinningCountStart = AsyncHandler(async (req, res) => {
     .json(new ApiRes(200, room, "Voting finished successfully"));
 });
 
+const participantReadyToVote = AsyncHandler(async (req, res) => {
+  const { roomCode, nickname } = req.params;
+
+  // Find Room
+  const room = await Room.findOne({ roomCode });
+
+  if (!room) {
+    throw new ApiError(404, "Room not found");
+  }
+
+  // Check participant
+  const participant = await Participant.findOne({
+    nickname,
+    room: room._id,
+  });
+
+  if (!participant) {
+    throw new ApiError(404, "Participant not found");
+  }
+
+  participant.readyToVote = true;
+  participant.save();
+  room.save();
+  return res
+    .status(200)
+    .json(
+      new ApiRes(200, participant, "Voting finished successfully"),
+    );
+});
+
 export {
   CreateRoom,
   JoinRoom,
@@ -214,4 +244,5 @@ export {
   readyToAddMovie,
   VotingStarted,
   WinningCountStart,
+  participantReadyToVote,
 };

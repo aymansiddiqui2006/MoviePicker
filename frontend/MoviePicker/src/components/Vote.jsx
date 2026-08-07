@@ -66,15 +66,7 @@ function Vote() {
     }
   }, [roomStatus, navigate]);
 
-  const handleStartCount = async () => {
-    try {
-      const res = await api.patch(ApiPaths.ROOM.WINNING_COUNT_STARTED(roomCode, nickname));
-      setRoomStatus(res.data.data.status);
-      toast.success("Counting Started");
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong")
-    }
-  }
+  
 
   if (loading) {
     return (
@@ -92,38 +84,6 @@ function Vote() {
     );
   }
 
-  if (currentIndex >= selectedMovie.length) {
-    if (!voted) {
-      return (
-        <div className="h-screen flex flex-col justify-center items-center text-white">
-          <h1 className="text-4xl font-bold">Please Vote</h1>
-          <p className="text-gray-300 mt-3">
-            vote any one of the movie
-          </p>
-          <button className='text-4xl text-white cursor-pointer mt-4' onClick={() => setCurrentIndex(prev => Math.max(prev - 1, 0))
-          }><FaArrowCircleLeft /></button>
-        </div>
-      );
-    }
-    return (
-      <div className="h-screen flex flex-col justify-center items-center text-white">
-        <h1 className="text-4xl font-bold">Voting Completed!</h1>
-        <p className="text-gray-300 mt-3">
-          Waiting for other participants...
-        </p>
-        {isHost && roomStatus === "voting" && (
-          <button
-            onClick={handleStartCount}
-            className="bg-yellow-500 hover:bg-yellow-600 text-black px-5 py-2 rounded-xl font-semibold mt-5"
-          >
-            Start count
-          </button>
-        )}
-      </div>
-    );
-  }
-
-
   const movie = selectedMovie[currentIndex];
 
   const handlevote = async (tmdbId) => {
@@ -134,13 +94,14 @@ function Vote() {
       toast.success("Vote Added");
       setVoted(true)
 
+      navigate("/room")
+
     } catch (error) {
       toast.error(error?.response?.data?.message || "Something went wrong")
     } finally {
       setVoting(false);
     }
   }
-
 
 
   return (

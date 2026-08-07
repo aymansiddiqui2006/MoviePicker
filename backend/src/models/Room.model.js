@@ -13,7 +13,7 @@ const RoomSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["waiting", "adding_movies", "voting","counting_vote", "finished"],
+      enum: ["waiting", "adding_movies" ,"voting" , "counting_vote", "finished"],
       default: "waiting",
     },
     host: {
