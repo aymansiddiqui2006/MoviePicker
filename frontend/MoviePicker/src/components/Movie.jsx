@@ -12,13 +12,14 @@ import { ApiPaths } from "../utils/apiPaths";
 import toast from "react-hot-toast";
 
 function Movie() {
-
   const navigate = useNavigate();
   const [selectMovie, setSelectMovie] = useState(null);
 
   const [search, setSearch] = useState("");
   const [searchedMovie, setSearchedMovie] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const [roomStatus, setRoomStatus] = useState("");
 
   const { roomCode, nickname, isHost } = useContext(RoomContext);
 
@@ -61,14 +62,31 @@ function Movie() {
   }, [search]);
 
 
+  useEffect(() => {
+    const fetchRoom = async () => {
+      try {
+        const res = await api.get(ApiPaths.ROOM.GET_ROOM(roomCode));
+        setRoomStatus(res.data.data.status);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchRoom();
+
+    const interval = setInterval(fetchRoom, 2000);
+
+    return () => clearInterval(interval);
+  }, [roomCode]);
+
   const handleStartVoting = async () => {
     try {
       const res = await api.patch(
         ApiPaths.ROOM.PARTICIPANT_READY_TO_VOTE(roomCode, nickname)
       );
 
-      navigate("/room");
-
+      setRoomStatus(res.data.data.status);
+      navigate("/room")
 
     } catch (error) {
       toast.error(
@@ -76,7 +94,6 @@ function Movie() {
       );
     }
   };
-
 
 
   return (
@@ -102,6 +119,7 @@ function Movie() {
         >
           Start Voting
         </button>
+
 
       </div>
 
