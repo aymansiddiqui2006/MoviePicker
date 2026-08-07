@@ -19,7 +19,7 @@ function MovieCard({ title, endpoint, onMovieClick }) {
                 const res = await fetch(`https://api.themoviedb.org/3${endpoint}`, options)
 
                 const mainRes = await res.json();
-                console.log(mainRes)
+                
 
                 setMovies(mainRes.results)
 
