@@ -1,0 +1,15 @@
+<mxfile host="65bd71144e">
+    <diagram id="Y5hElfCn2-V0dvDUML9U" name="Page-1">
+        <mxGraphModel dx="793" dy="563" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <UserObject label="Host creates room&#xa;        ↓&#xa;Participants join&#xa;        ↓&#xa;Room.status = &quot;waiting&quot;&#xa;        ↓&#xa;Everyone clicks Ready&#xa;        ↓&#xa;If everyone ready&#xa;Room.status = &quot;adding_movies&quot;&#xa;        ↓&#xa;Each participant selects 2 movies&#xa;        ↓&#xa;participant.readyToVote = true&#xa;        ↓&#xa;Host waits until EVERY participant.readyToVote == true&#xa;        ↓&#xa;Host clicks &quot;Start Voting&quot;&#xa;        ↓&#xa;Room.status = &quot;voting&quot;&#xa;        ↓&#xa;Everyone votes&#xa;        ↓&#xa;participant.hasVoted = true&#xa;        ↓&#xa;Host waits until EVERY participant.hasVoted == true&#xa;        ↓&#xa;Host clicks &quot;Finish Voting&quot;&#xa;        ↓&#xa;Room.status = &quot;counting_vote&quot;&#xa;        ↓&#xa;Winner calculated&#xa;        ↓&#xa;Room.status = &quot;finished&quot;" link="Host creates room&#xa;        ↓&#xa;Participants join&#xa;        ↓&#xa;Room.status = &quot;waiting&quot;&#xa;        ↓&#xa;Everyone clicks Ready&#xa;        ↓&#xa;If everyone ready&#xa;Room.status = &quot;adding_movies&quot;&#xa;        ↓&#xa;Each participant selects 2 movies&#xa;        ↓&#xa;participant.readyToVote = true&#xa;        ↓&#xa;Host waits until EVERY participant.readyToVote == true&#xa;        ↓&#xa;Host clicks &quot;Start Voting&quot;&#xa;        ↓&#xa;Room.status = &quot;voting&quot;&#xa;        ↓&#xa;Everyone votes&#xa;        ↓&#xa;participant.hasVoted = true&#xa;        ↓&#xa;Host waits until EVERY participant.hasVoted == true&#xa;        ↓&#xa;Host clicks &quot;Finish Voting&quot;&#xa;        ↓&#xa;Room.status = &quot;counting_vote&quot;&#xa;        ↓&#xa;Winner calculated&#xa;        ↓&#xa;Room.status = &quot;finished&quot;" id="2">
+                    <mxCell style="text;whiteSpace=wrap;align=center;" vertex="1" parent="1">
+                        <mxGeometry x="140" y="250" width="520" height="590" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
