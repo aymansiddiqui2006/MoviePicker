@@ -10,28 +10,25 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    credentials: true
   },
 });
 
 io.on("connection", (socket) => {
-
-    socket.on("join-room", (roomCode) => {
-
-        socket.join(roomCode);
-
-    });
-
+  socket.on("join-room", (roomCode) => {
+    socket.join(roomCode);
+  });
 });
 
 app.use(express.json());
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL,
     credentials: true,
-  })
+  }),
 );
 
 app.use("/api/v1/room", roomRouter);
