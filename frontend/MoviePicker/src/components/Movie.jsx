@@ -33,19 +33,6 @@ function Movie() {
     },
   };
 
-  const fetchRoom = async () => {
-    try {
-      const res = await api.get(ApiPaths.ROOM.GET_ROOM(roomCode));
-      setRoomStatus(res.data.data.status);
-
-      if (res.data.data.status === "voting") {
-        navigate("/vote")
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     if (!search.trim()) {
       setSearchedMovie([]);
@@ -77,16 +64,18 @@ function Movie() {
 
 
   useEffect(() => {
+    const handleRoomUpdate = (room) => {
+      if (room.status === "voting") {
+        navigate("/vote");
+      }
+    };
 
-    const refresh = () => fetchRoom();
-
-    socket.on("room-updated", refresh);
+    socket.on("room-updated", handleRoomUpdate);
 
     return () => {
-      socket.off("room-updated", refresh);
-    }
-
-  }, [roomCode]);
+      socket.off("room-updated", handleRoomUpdate);
+    };
+  }, [navigate]);
 
   const handleStartVoting = async () => {
     try {

@@ -43,32 +43,21 @@ function Vote() {
       getmovies();
     }
   }, [roomCode])
-
-
-  const fetchRoom = async () => {
-    try {
-      const res = await api.get(ApiPaths.ROOM.GET_ROOM(roomCode));
-      setRoomStatus(res.data.data.status);
-
-      if (res.data.data.status === "counting_vote") {
-        navigate("/result")
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  
 
   useEffect(() => {
+    const handleRoomUpdate = (room) => {
+      if (room.status === "counting_vote") {
+        navigate("/result");
+      }
+    };
 
-    const refresh = () => fetchRoom();
-
-    socket.on("room-updated", refresh);
+    socket.on("room-updated", handleRoomUpdate);
 
     return () => {
-      socket.off("room-updated", refresh);
-    }
-
-  }, [roomCode]);
+      socket.off("room-updated", handleRoomUpdate);
+    };
+  }, [navigate]);
 
 
   const handleStartCount = async () => {
