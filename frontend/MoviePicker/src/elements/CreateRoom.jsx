@@ -13,7 +13,7 @@ import { ApiPaths } from '../utils/apiPaths.js';
 function CreateRoom() {
 
     const navigate = useNavigate();
-    const { setroomCode, setnickname, setroomname, setIsHost } = useContext(RoomContext)
+    const { setroomCode, setnickname , setIsHost } = useContext(RoomContext)
 
     const [roomName, setRoomName] = useState("");
     const [nickname, setNickename] = useState("");
@@ -53,7 +53,7 @@ function CreateRoom() {
 
             setroomCode(createRoomCode);
             setnickname(nickname);
-            setroomname(roomName);
+            setRoomName(roomName);
 
             setIsHost(true);
 
@@ -62,7 +62,7 @@ function CreateRoom() {
 
         } catch (error) {
             toast.error(
-                error?.response?.data?.message || "Something went wrong"
+                error?.response?.data?.message || error.message || "Something went wrong"
             );
         } finally {
             setLoading(false);
