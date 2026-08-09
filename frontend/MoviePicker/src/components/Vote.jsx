@@ -43,7 +43,7 @@ function Vote() {
       getmovies();
     }
   }, [roomCode])
-
+  
 
   useEffect(() => {
     const handleRoomUpdate = (room) => {
