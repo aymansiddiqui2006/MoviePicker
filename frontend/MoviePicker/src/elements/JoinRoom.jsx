@@ -6,6 +6,7 @@ import { ApiPaths } from '../utils/apiPaths.js';
 import toast from 'react-hot-toast';
 
 import RoomContext from "../context/RoomContext.jsx"
+import socket from '../utils/socket.js';
 
 
 function JoinRoom() {
@@ -47,8 +48,8 @@ function JoinRoom() {
 
       setroomCode(roomCode);
       setnickname(nickname);
-      
 
+      socket.emit("join-room", roomCode);
 
       navigate("/room")
 

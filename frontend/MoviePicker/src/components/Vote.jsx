@@ -10,6 +10,8 @@ import { useNavigate } from 'react-router-dom';
 import { BiLike, BiDislike } from "react-icons/bi";
 import { FaArrowCircleRight, FaArrowCircleLeft } from "react-icons/fa";
 
+import socket from '../utils/socket';
+
 function Vote() {
 
   const navigate = useNavigate();
@@ -42,21 +44,30 @@ function Vote() {
     }
   }, [roomCode])
 
-  useEffect(() => {
-    const fetchRoom = async () => {
-      try {
-        const res = await api.get(ApiPaths.ROOM.GET_ROOM(roomCode));
-        setRoomStatus(res.data.data.status);
-      } catch (error) {
-        console.log(error);
+
+  const fetchRoom = async () => {
+    try {
+      const res = await api.get(ApiPaths.ROOM.GET_ROOM(roomCode));
+      setRoomStatus(res.data.data.status);
+
+      if (res.data.data.status === "counting_vote") {
+        navigate("/result")
       }
-    };
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-    fetchRoom();
+  useEffect(() => {
 
-    const interval = setInterval(fetchRoom, 2000);
+    const refresh = () => fetchRoom();
 
-    return () => clearInterval(interval);
+    socket.on("room-updated", refresh);
+
+    return () => {
+      socket.off("room-updated", refresh);
+    }
+
   }, [roomCode]);
 
 

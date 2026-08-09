@@ -3,7 +3,10 @@ import ApiRes from "../utils/ApiRes.js";
 import AsyncHandler from "../utils/AsyncHandler.js";
 import { Room } from "../models/Room.model.js";
 import { Participant } from "../models/Participant.model.js";
-import { Movie } from "../models/Movie.model.js";
+
+
+
+import emitRoomUpdate from '../helper/emitChange.js'
 
 const CreateRoom = AsyncHandler(async (req, res) => {
   const { roomName, nickname } = req.body;
@@ -47,6 +50,8 @@ const CreateRoom = AsyncHandler(async (req, res) => {
 
   await createdRoomData.save();
 
+  await emitRoomUpdate(roomCode);
+
   return res.status(201).json(new ApiRes(201, createdRoomData, "room created"));
 });
 
@@ -74,6 +79,8 @@ const JoinRoom = AsyncHandler(async (req, res) => {
 
   findRoom.members.push(data._id);
   await findRoom.save();
+
+  await emitRoomUpdate(roomCode);
 
   return res.status(201).json(new ApiRes(201, data, "room joined"));
 });
@@ -130,6 +137,8 @@ const readyToAddMovie = AsyncHandler(async (req, res) => {
     await room.save();
   }
 
+  await emitRoomUpdate(roomCode);
+
   return res.status(200).json(
     new ApiRes(
       200,
@@ -170,6 +179,8 @@ const VotingStarted = AsyncHandler(async (req, res) => {
   findRoom.status = "voting";
   await findRoom.save();
 
+  await emitRoomUpdate(roomCode);
+
   return res.status(200).json(new ApiRes(200, findRoom, "status updated!"));
 });
 
@@ -202,6 +213,8 @@ const WinningCountStart = AsyncHandler(async (req, res) => {
   room.status = "counting_vote";
   await room.save();
 
+  await emitRoomUpdate(roomCode);
+
   return res
     .status(200)
     .json(new ApiRes(200, room, "Voting finished successfully"));
@@ -228,13 +241,13 @@ const participantReadyToVote = AsyncHandler(async (req, res) => {
   }
 
   participant.readyToVote = true;
-  participant.save();
-  room.save();
+  await participant.save();
+
+  await emitRoomUpdate(roomCode);
+
   return res
     .status(200)
-    .json(
-      new ApiRes(200, participant, "Voting finished successfully"),
-    );
+    .json(new ApiRes(200, participant, "Voting finished successfully"));
 });
 
 export {

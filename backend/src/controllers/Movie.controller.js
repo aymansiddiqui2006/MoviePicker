@@ -6,6 +6,9 @@ import AsyncHandler from "../utils/AsyncHandler.js";
 import { Room } from "../models/Room.model.js";
 import { Participant } from "../models/Participant.model.js";
 
+import emitRoomUpdate from '../helper/emitChange.js'
+import { io } from "../../app.js";
+
 const AddMovies = AsyncHandler(async (req, res) => {
   const { roomCode, nickname } = req.params;
   const { tmdbId, poster, title } = req.body;
@@ -58,6 +61,8 @@ const AddMovies = AsyncHandler(async (req, res) => {
 
   participant.moviesSelected.push(addMovie._id);
   await participant.save();
+
+  await emitRoomUpdate(roomCode);
 
   return res
     .status(201)
@@ -127,6 +132,8 @@ const VoteMovie = AsyncHandler(async (req, res) => {
   participant.hasVoted = true;
   await participant.save();
 
+  await emitRoomUpdate(roomCode);
+
   return res
     .status(200)
     .json(new ApiRes(200, movie, "Vote submitted successfully"));
@@ -161,12 +168,13 @@ const WinningMovie = AsyncHandler(async (req, res) => {
   // Check for tie
   const winners = movies.filter((movie) => movie.votes === highestVotes);
 
+  io.to(roomCode).emit("result-updated", winners);
 
   return res.status(200).json(
     new ApiRes(
       200,
       {
-        winner: winners
+        winner: winners,
       },
       "Voting finished successfully",
     ),

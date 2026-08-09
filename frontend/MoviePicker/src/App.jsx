@@ -1,6 +1,9 @@
 import Home from "./components/Home.jsx";
 import { Toaster } from "react-hot-toast";
 
+import socket from "./utils/socket.js";
+import { useEffect } from "react";
+
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Room from "./components/Room.jsx";
 import Movie from "./components/Movie.jsx";
@@ -31,6 +34,15 @@ const route = createBrowserRouter([
 ])
 
 function App() {
+
+  useEffect(() => {
+    socket.connect();
+
+    return () => {
+      socket.disconnect();
+    }
+  }, [])
+
   return (
     <>
       <Toaster position="top-center" />

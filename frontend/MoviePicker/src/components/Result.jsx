@@ -5,12 +5,15 @@ import RoomContext from "../context/RoomContext";
 import toast from "react-hot-toast";
 import no_image from "../assets/no_image.png";
 
+import socket from '../utils/socket.js';
+
 
 function Result() {
   const { roomCode } = useContext(RoomContext);
 
   const [loading, setLoading] = useState(true);
   const [winners, setWinners] = useState([]);
+
 
   useEffect(() => {
     const getWinner = async () => {

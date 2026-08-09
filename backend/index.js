@@ -1,6 +1,6 @@
 import connectDB from "./src/connection/connectMongo.js";
 import dotenv from "dotenv";
-import app from './app.js'
+import server from './app.js'
 
 dotenv.config({
   path: "./.env",
@@ -8,7 +8,7 @@ dotenv.config({
 
 connectDB()
   .then(() => {
-    app.listen(process.env.PORT || 8000, () => {
+    server.listen(process.env.PORT || 8000, () => {
       console.log(`server is runner in port ${process.env.PORT}`);
     });
   })

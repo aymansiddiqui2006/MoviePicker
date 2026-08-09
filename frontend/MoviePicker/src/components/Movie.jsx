@@ -10,6 +10,7 @@ import RoomContext from '../context/RoomContext';
 import api from "../utils/apiInstance";
 import { ApiPaths } from "../utils/apiPaths";
 import toast from "react-hot-toast";
+import socket from '../utils/socket';
 
 function Movie() {
   const navigate = useNavigate();
@@ -30,6 +31,19 @@ function Movie() {
       Authorization:
         `Bearer ${import.meta.env.VITE_API_CODE}`,
     },
+  };
+
+  const fetchRoom = async () => {
+    try {
+      const res = await api.get(ApiPaths.ROOM.GET_ROOM(roomCode));
+      setRoomStatus(res.data.data.status);
+
+      if (res.data.data.status === "voting") {
+        navigate("/vote")
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -63,20 +77,15 @@ function Movie() {
 
 
   useEffect(() => {
-    const fetchRoom = async () => {
-      try {
-        const res = await api.get(ApiPaths.ROOM.GET_ROOM(roomCode));
-        setRoomStatus(res.data.data.status);
-      } catch (error) {
-        console.log(error);
-      }
-    };
 
-    fetchRoom();
+    const refresh = () => fetchRoom();
 
-    const interval = setInterval(fetchRoom, 2000);
+    socket.on("room-updated", refresh);
 
-    return () => clearInterval(interval);
+    return () => {
+      socket.off("room-updated", refresh);
+    }
+
   }, [roomCode]);
 
   const handleStartVoting = async () => {

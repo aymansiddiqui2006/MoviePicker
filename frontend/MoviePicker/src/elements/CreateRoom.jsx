@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react'
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
+import socket from "../utils/socket.js";
 
 import RoomContext from "../context/RoomContext.jsx"
 
@@ -55,6 +56,8 @@ function CreateRoom() {
             setroomname(roomName);
 
             setIsHost(true);
+
+            socket.emit("join-room", createRoomCode);
 
 
         } catch (error) {

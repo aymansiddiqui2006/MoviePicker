@@ -8,6 +8,7 @@ import { useContext } from 'react'
 import RoomContext from '../context/RoomContext'
 
 import { IoCheckbox } from "react-icons/io5";
+import socket from '../utils/socket'
 
 function Room() {
 
@@ -23,41 +24,60 @@ function Room() {
 
     const { roomCode, nickname, setIsHost, isHost } = useContext(RoomContext)
 
+
     const fetchRoom = async () => {
         try {
             const res = await api.get(ApiPaths.ROOM.GET_ROOM(roomCode));
 
-            setRoomName(res?.data?.data?.roomName);
-            setMembers(res?.data?.data?.members);
-            setHost(res?.data?.data?.host);
-            setRoomStatus(res?.data?.data?.status)
+            const room = res.data.data;
 
-            const myData = res.data.data.members.find(
+            setRoomName(room.roomName);
+            setMembers(room.members);
+            setHost(room.host);
+            setRoomStatus(room.status);
+
+            const myData = room.members.find(
                 member => member.nickname === nickname
             );
 
             setPersonStatus(myData?.readyToVote ?? false);
             setHasVoted(myData?.hasVoted ?? false);
 
-
-            setIsHost(res.data.data.host.nickname === nickname);
-
-        } catch (error) {
-            toast.error(
-                error?.response?.data?.message || "Something went wrong"
-            );
+            setIsHost(room.host?.nickname === nickname);
+        } catch (err) {
+            console.log(err);
         }
-    }
+    };
 
     useEffect(() => {
         if (!roomCode) return;
 
         fetchRoom();
 
-        const interval = setInterval(fetchRoom, 2000);
+        socket.emit("join-room", roomCode);
 
-        return () => clearInterval(interval);
-    }, []);
+        const handleRoomUpdate = (room) => {
+            setRoomName(room.roomName);
+            setMembers(room.members);
+            setHost(room.host);
+            setRoomStatus(room.status);
+
+            const myData = room.members.find(
+                (member) => member.nickname === nickname
+            );
+
+            setPersonStatus(myData?.readyToVote ?? false);
+            setHasVoted(myData?.hasVoted ?? false);
+
+            setIsHost(room.host?.nickname === nickname);
+        };
+
+        socket.on("room-updated", handleRoomUpdate);
+
+        return () => {
+            socket.off("room-updated", handleRoomUpdate);
+        };
+    }, [nickname, roomCode]);
 
 
     useEffect(() => {
@@ -77,6 +97,10 @@ function Room() {
             }
         }
 
+        if (roomStatus === "counting_vote") {
+            navigate("/result");
+        }
+
     }, [roomStatus, personStatus, hasVoted, navigate]);
 
 
@@ -85,11 +109,10 @@ function Room() {
         e.preventDefault();
 
         try {
-            const res = await api.patch(ApiPaths.ROOM.READY_TO_ADD_MOVIE(roomCode, nickname))
-            toast.success("ready to add movie")
+            await api.patch(ApiPaths.ROOM.READY_TO_ADD_MOVIE(roomCode, nickname));
 
+            toast.success("Ready to add movie");
 
-            fetchRoom();
         } catch (error) {
             toast.error(error?.response?.data?.message || "Something went wrong")
         }
@@ -99,26 +122,23 @@ function Room() {
         e.preventDefault();
 
         try {
-            const res = await api.patch(ApiPaths.ROOM.VOTING_STARTED(roomCode, nickname))
-            toast.success("ready to vote movie")
+            await api.patch(ApiPaths.ROOM.VOTING_STARTED(roomCode, nickname));
 
-            setPersonStatus(true);
-            fetchRoom();
+            toast.success("Voting started");
         } catch (error) {
             toast.error(error?.response?.data?.message || "Something went wrong")
         }
     }
 
     const handleStartCount = async () => {
-    try {
-      const res = await api.patch(ApiPaths.ROOM.WINNING_COUNT_STARTED(roomCode, nickname));
-      setRoomStatus(res.data.data.status);
-      toast.success("Counting Started");
-      navigate("/result")
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong")
+        try {
+            await api.patch(ApiPaths.ROOM.WINNING_COUNT_STARTED(roomCode, nickname));
+
+            toast.success("Counting Started");
+        } catch (error) {
+            toast.error(error?.response?.data?.message || "Something went wrong")
+        }
     }
-  }
 
     if (roomStatus === "adding_movies") {
         return (
@@ -266,7 +286,11 @@ function Room() {
             </div>
         )
     }
-
+    console.log("ROOM RENDER", {
+        roomStatus,
+        members,
+        membersLength: members.length,
+    });
     return (
         <div className='text-white flex flex-col items-center mt-5'>
             <div className="header flex flex-col gap-3">
