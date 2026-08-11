@@ -124,14 +124,14 @@ function CreateRoom() {
                                 onClick={() => {
                                     const shareText = `🎬 You're invited to a Movie Picker room: ${roomName}!
 
-Join the room and vote together to decide what to watch.
+                                     Join the room and vote together to decide what to watch.
 
-🔑 Room Code: ${roomCode}
-
-🌐 Join here:
-https://movie-picker-wheat.vercel.app/
-
-Enter the room code after opening the app. 🍿`;
+                                     🔑 Room Code: ${roomCode}
+                                     
+                                     🌐 Join here:
+                                     https://movie-picker-wheat.vercel.app/
+                                     
+                                     Enter the room code after opening the app. 🍿`;
 
                                     navigator.clipboard.writeText(shareText);
                                     toast.success("Invitation copied!");
