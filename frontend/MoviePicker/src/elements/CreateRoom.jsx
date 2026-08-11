@@ -13,7 +13,7 @@ import { ApiPaths } from '../utils/apiPaths.js';
 function CreateRoom() {
 
     const navigate = useNavigate();
-    const { setroomCode, setnickname , setIsHost } = useContext(RoomContext)
+    const { setroomCode, setnickname, setIsHost } = useContext(RoomContext)
 
     const [roomName, setRoomName] = useState("");
     const [nickname, setNickename] = useState("");
@@ -122,8 +122,17 @@ function CreateRoom() {
                             <button type="button" className='bg-amber-400 py-1 px-5 rounded-xl text-lg font-semibold hover:bg-yellow-500 cursor-pointer'
 
                                 onClick={() => {
-                                    navigator.clipboard.writeText(roomCode);
-                                    toast.success("Room code copied");
+                                    const shareText = ` You're invited to a Movie Picker room: ${roomName}!
+                                    
+                                    Join the room and vote together to decide what to watch.
+                                    
+                                    🔑 Room Code: ${roomCode}
+                                    🌐 Join here:https://movie-picker-wheat.vercel.app/
+                                    
+                                    Enter the room code after opening the app. `;
+
+                                    navigator.clipboard.writeText(shareText);
+                                    toast.success("Invitation copied!");
                                 }}
                             >Copy
                             </button>
