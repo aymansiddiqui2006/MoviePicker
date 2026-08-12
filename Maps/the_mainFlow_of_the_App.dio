@@ -5,10 +5,19 @@
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
                 <UserObject label="Host creates room&#xa;        ↓&#xa;Participants join&#xa;        ↓&#xa;Room.status = &quot;waiting&quot;&#xa;        ↓&#xa;Everyone clicks Ready&#xa;        ↓&#xa;If everyone ready&#xa;Room.status = &quot;adding_movies&quot;&#xa;        ↓&#xa;Each participant selects 2 movies&#xa;        ↓&#xa;participant.readyToVote = true&#xa;        ↓&#xa;Host waits until EVERY participant.readyToVote == true&#xa;        ↓&#xa;Host clicks &quot;Start Voting&quot;&#xa;        ↓&#xa;Room.status = &quot;voting&quot;&#xa;        ↓&#xa;Everyone votes&#xa;        ↓&#xa;participant.hasVoted = true&#xa;        ↓&#xa;Host waits until EVERY participant.hasVoted == true&#xa;        ↓&#xa;Host clicks &quot;Finish Voting&quot;&#xa;        ↓&#xa;Room.status = &quot;counting_vote&quot;&#xa;        ↓&#xa;Winner calculated&#xa;        ↓&#xa;Room.status = &quot;finished&quot;" link="Host creates room&#xa;        ↓&#xa;Participants join&#xa;        ↓&#xa;Room.status = &quot;waiting&quot;&#xa;        ↓&#xa;Everyone clicks Ready&#xa;        ↓&#xa;If everyone ready&#xa;Room.status = &quot;adding_movies&quot;&#xa;        ↓&#xa;Each participant selects 2 movies&#xa;        ↓&#xa;participant.readyToVote = true&#xa;        ↓&#xa;Host waits until EVERY participant.readyToVote == true&#xa;        ↓&#xa;Host clicks &quot;Start Voting&quot;&#xa;        ↓&#xa;Room.status = &quot;voting&quot;&#xa;        ↓&#xa;Everyone votes&#xa;        ↓&#xa;participant.hasVoted = true&#xa;        ↓&#xa;Host waits until EVERY participant.hasVoted == true&#xa;        ↓&#xa;Host clicks &quot;Finish Voting&quot;&#xa;        ↓&#xa;Room.status = &quot;counting_vote&quot;&#xa;        ↓&#xa;Winner calculated&#xa;        ↓&#xa;Room.status = &quot;finished&quot;" id="2">
-                    <mxCell style="text;whiteSpace=wrap;align=center;" vertex="1" parent="1">
+                    <mxCell style="text;whiteSpace=wrap;align=center;" parent="1" vertex="1">
                         <mxGeometry x="140" y="250" width="520" height="590" as="geometry"/>
                     </mxCell>
                 </UserObject>
+                <mxCell id="5" value="" style="edgeStyle=none;html=1;" edge="1" parent="1" source="3" target="4">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="on refresh user left the room , and the data is not stores in the room" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+                    <mxGeometry x="580" y="250" width="200" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="in the waiting room for start selecting movie the host have manual button to start" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="580" y="300" width="200" height="30" as="geometry"/>
+                </mxCell>
             </root>
         </mxGraphModel>
     </diagram>
