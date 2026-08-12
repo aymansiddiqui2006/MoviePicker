@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
 import no_image from "../assets/no_image.png"
 
 
 
-function MovieCard({ title, endpoint, onMovieClick }) {
+function MovieCard({ title, endpoint, onMovieClick, category }) {
+    const navigate = useNavigate();
 
     const [movies, setMovies] = useState([]);
 
@@ -19,7 +21,7 @@ function MovieCard({ title, endpoint, onMovieClick }) {
                 const res = await fetch(`https://api.themoviedb.org/3${endpoint}`, options)
 
                 const mainRes = await res.json();
-                
+
 
                 setMovies(mainRes.results)
 
@@ -44,7 +46,7 @@ function MovieCard({ title, endpoint, onMovieClick }) {
                                     movie.poster_path
                                         ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
                                         : no_image
-                            
+
                                 }
                                 alt={movie.original_title} className='object-fill h-full w-full' >
                             </img>
@@ -52,7 +54,7 @@ function MovieCard({ title, endpoint, onMovieClick }) {
                     ))
                 }
             </div>
-            <h2 className='flex justify-end font-semibold'>View All →</h2>
+            <h2 className='flex justify-end font-semibold text-white cursor-pointer hover:text-gray-400' onClick={()=>navigate(`/movies/${category}`)}>View All →</h2>
         </div>
     )
 }

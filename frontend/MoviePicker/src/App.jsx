@@ -9,6 +9,7 @@ import Room from "./components/Room.jsx";
 import Movie from "./components/Movie.jsx";
 import Vote from "./components/Vote.jsx";
 import Result from "./components/Result.jsx";
+import SeeAllPage from "./components/SeeAllPage.jsx";
 
 const route = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const route = createBrowserRouter([
   {
     path: "/result",
     element: <Result />
+  },
+  {
+    path: "movies/:category",
+    element: <SeeAllPage />
   }
 ])
 

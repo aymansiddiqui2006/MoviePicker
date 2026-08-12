@@ -170,42 +170,49 @@ function Movie() {
             endpoint={"/movie/popular?language=en-US&page=1"}
             title={"Popular"}
             onMovieClick={setSelectMovie}
+            category={"popular"}
           />
 
           <MovieCard
             endpoint={"/movie/top_rated?language=en-US&page=1"}
             title={"Top Rated"}
             onMovieClick={setSelectMovie}
+            category={"top-rated"}
           />
 
           <MovieCard
             endpoint={"/discover/movie?with_original_language=hi&sort_by=popularity.desc"}
             title={"Bollywood"}
             onMovieClick={setSelectMovie}
+            category={"bollywood"}
           />
 
           <MovieCard
             endpoint={"/discover/movie?with_original_language=en&sort_by=revenue.desc"}
             title={"Hollywood"}
             onMovieClick={setSelectMovie}
+            category={"hollywood"}
           />
 
           <MovieCard
             endpoint={"/discover/movie?with_genres=35&sort_by=popularity.desc&page=1"}
             title={"Comedy"}
             onMovieClick={setSelectMovie}
+            category={"comedy"}
           />
 
           <MovieCard
             endpoint={"/discover/movie?with_genres=28&sort_by=popularity.desc&page=1"}
             title={"Action"}
             onMovieClick={setSelectMovie}
+            category={"action"}
           />
 
           <MovieCard
             endpoint={"/discover/movie?with_genres=16&sort_by=popularity.desc&page=1"}
             title={"Animation"}
             onMovieClick={setSelectMovie}
+            category={"animation"}
           />
         </>
       )}
