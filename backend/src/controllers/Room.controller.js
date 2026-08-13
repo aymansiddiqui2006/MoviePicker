@@ -4,9 +4,7 @@ import AsyncHandler from "../utils/AsyncHandler.js";
 import { Room } from "../models/Room.model.js";
 import { Participant } from "../models/Participant.model.js";
 
-
-
-import emitRoomUpdate from '../helper/emitChange.js'
+import emitRoomUpdate from "../helper/emitChange.js";
 
 const CreateRoom = AsyncHandler(async (req, res) => {
   const { roomName, nickname } = req.body;
@@ -250,6 +248,56 @@ const participantReadyToVote = AsyncHandler(async (req, res) => {
     .json(new ApiRes(200, participant, "Voting finished successfully"));
 });
 
+const removeParticipant = AsyncHandler(async (req, res) => {
+  const { roomCode, nickname, participantName } = req.params;
+
+  const room = await Room.findOne({ roomCode });
+
+  if (!room) {
+    throw new ApiError(400, "Room not found");
+  }
+
+  const participant = await Participant.findOne({
+    room: room._id,
+    nickname,
+  });
+
+  if (!participant) {
+    throw new ApiError(400, "participant nit found!!");
+  }
+
+  // Only host can delete member
+  if (room.host.toString() !== participant._id.toString()) {
+    throw new ApiError(403, "Only host can delete member");
+  }
+
+  const member = await Participant.findOne({
+    room: room._id,
+    nickname: participantName,
+  });
+
+  if (!member) {
+    throw new ApiError(401, "member not found!!");
+  }
+
+  // Don't allow host to remove themselves
+  if (member._id.toString() === participant._id.toString()) {
+    throw new ApiError(400, "Host cannot remove themselves");
+  }
+
+  room.members = room.members.filter(
+    (memberId) => memberId.toString() !== member._id.toString(),
+  );
+
+  await room.save();
+
+  await Participant.findByIdAndDelete(member._id);
+
+  return res
+    .status(200)
+    .json(new ApiRes(200, room, `${participantName} removed from the room`));
+});
+
 export {
   CreateRoom,
   JoinRoom,
@@ -258,4 +306,5 @@ export {
   VotingStarted,
   WinningCountStart,
   participantReadyToVote,
+  removeParticipant,
 };
