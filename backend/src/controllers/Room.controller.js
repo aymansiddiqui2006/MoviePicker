@@ -293,6 +293,8 @@ const removeParticipant = AsyncHandler(async (req, res) => {
 
   await Participant.findByIdAndDelete(member._id);
 
+  await emitRoomUpdate(roomCode);
+
   return res
     .status(200)
     .json(new ApiRes(200, room, `${participantName} removed from the room`));
