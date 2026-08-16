@@ -138,6 +138,20 @@ Participants Vote
 Determine Winning Movie
 ````
 
+## 📸 Screenshots
+
+### Create Room
+![Create Room](./screenshots/create-room.png)
+
+### Join Room
+![Join Room](./screenshots/join-room.png)
+
+### Waiting Room
+![Waiting Room](./screenshots/waiting-room.png)
+
+### Movie Page
+![Movie Page](./screenshots/movies.png)
+
 ---
 
 ## 🏠 1. Create a Room
@@ -883,20 +897,6 @@ Some features I would like to add in future versions include:
 
 ---
 
-# 📸 Screenshots
-
-```markdown
-![Create Room](screenshots/create-room.png)
-
-![Join Room](screenshots/join-room.png)
-
-![Waiting Room](screenshots/waiting-room.png)
-
-![Movie Page](screenshots/movies.png)
-```
-
----
-
 # 🌍 Deployment
 
 ## Frontend
@@ -981,6 +981,3 @@ Feedback, suggestions, and improvements are always welcome.
 
 💻 **GitHub Repository:**
 [https://github.com/aymansiddiqui2006/MoviePicker](https://github.com/aymansiddiqui2006/MoviePicker)
-
-```
-
