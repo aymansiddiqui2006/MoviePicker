@@ -1,5 +1,3 @@
-Yes. Here is the **complete `README.md` content** for your Movie Picker project. You can copy everything below and paste it directly into your `README.md`.
-
 ````markdown
 # 🎬 Movie Picker
 
