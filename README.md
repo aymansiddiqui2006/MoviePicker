@@ -885,31 +885,14 @@ Some features I would like to add in future versions include:
 
 # 📸 Screenshots
 
-Add screenshots of the application here.
-
-For example:
-
-```text
-screenshots/
-│
-├── home.png
-├── create-room.png
-├── join-room.png
-├── movie-selection.png
-├── room.png
-└── voting.png
-```
-
-Then add them to this README:
-
 ```markdown
-![Home Page](screenshots/home.png)
-
 ![Create Room](screenshots/create-room.png)
 
-![Movie Room](screenshots/room.png)
+![Join Room](screenshots/join-room.png)
 
-![Voting](screenshots/voting.png)
+![Waiting Room](screenshots/waiting-room.png)
+
+![Movie Page](screenshots/movies.png)
 ```
 
 ---
