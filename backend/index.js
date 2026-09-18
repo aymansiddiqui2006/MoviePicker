@@ -1,10 +1,8 @@
+import "dotenv/config";
+
 import connectDB from "./src/connection/connectMongo.js";
-import dotenv from "dotenv";
 import server from './app.js'
 
-dotenv.config({
-  path: "./.env",
-});
 
 connectDB()
   .then(() => {
