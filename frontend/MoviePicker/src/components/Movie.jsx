@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import  { useState, useEffect, useContext } from 'react';
 import MovieCard from '../elements/MovieCard';
 import Modal from '../elements/Modal';
 import no_image from "../assets/no_image.png"

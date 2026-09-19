@@ -47,7 +47,7 @@ const AddMovies = AsyncHandler(async (req, res) => {
     throw new ApiError(409, "Movie already added");
   }
 
-  if (participant.moviesSelected.length >= 2) {
+  if (participant.moviesSelected.length >= 5) {
     throw new ApiError(400, "You can only add 2 movies");
   }
 
@@ -179,6 +179,21 @@ const WinningMovie = AsyncHandler(async (req, res) => {
       "Voting finished successfully",
     ),
   );
+});
+
+const HostStartSelectingMovie = AsyncHandler(async (req,res)=>{
+  const {host,roomCode} = req.params;
+
+  const room = await Room.find({
+    roomCode
+  })
+
+  if(!room){
+     throw new ApiError(400, "room nit found");
+  }
+
+  
+
 });
 
 export { AddMovies, GetMovie, VoteMovie, WinningMovie };

@@ -1,4 +1,3 @@
-import React from 'react'
 import { useEffect, useState, useContext } from 'react';
 import api from '../utils/apiInstance';
 import { ApiPaths } from '../utils/apiPaths';
