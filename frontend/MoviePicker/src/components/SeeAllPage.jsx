@@ -1,4 +1,4 @@
-import  { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import categories from '../utils/MovieCategory.js';
 import Modal from '../elements/Modal.jsx';
@@ -6,6 +6,9 @@ import api from '../utils/apiInstance.js';
 import { ApiPaths } from '../utils/apiPaths.js';
 import RoomContext from '../context/RoomContext.jsx';
 import toast from 'react-hot-toast';
+
+//see all movie page 
+//when we click on the see more in movie container we can see the movie of the specific type
 
 function SeeAllPage() {
     const { category } = useParams();

@@ -13,7 +13,6 @@ const RoomContextProvider = ({ children }) => {
         return code;
     });
 
-
     const [isHost, setIsHost] = useState(false);
 
     return (

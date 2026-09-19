@@ -1,4 +1,4 @@
-import  { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import MovieCard from '../elements/MovieCard';
 import Modal from '../elements/Modal';
 import no_image from "../assets/no_image.png"
@@ -11,10 +11,12 @@ import api from "../utils/apiInstance";
 import { ApiPaths } from "../utils/apiPaths";
 import toast from "react-hot-toast";
 import socket from '../utils/socket';
+import ConfirmModal from '../elements/ConfirmModal';
 
 function Movie() {
   const navigate = useNavigate();
   const [selectMovie, setSelectMovie] = useState(null);
+  const [confirmSelect, setConfirmSelect] = useState(true);
 
   const [search, setSearch] = useState("");
   const [searchedMovie, setSearchedMovie] = useState([]);
@@ -223,6 +225,16 @@ function Movie() {
           isClose={() => setSelectMovie(null)}
         />
       )}
+
+      {
+        confirmSelect && (
+          <ConfirmModal title={"Movie Selected"} isClose={() => setConfirmSelect(false)}>
+            <div>
+              hello
+            </div>
+          </ConfirmModal>
+        )
+      }
     </div>
   );
 }
