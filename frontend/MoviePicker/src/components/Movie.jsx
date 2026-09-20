@@ -16,9 +16,10 @@ import ConfirmModal from '../elements/ConfirmModal';
 function Movie() {
   const navigate = useNavigate();
   const [selectMovie, setSelectMovie] = useState(null);
-  const [confirmSelect, setConfirmSelect] = useState(true);
+  const [confirmSelect, setConfirmSelect] = useState(false);
 
   const [search, setSearch] = useState("");
+  const [openSearchBar, setOpenSearchBar] = useState(false);
   const [searchedMovie, setSearchedMovie] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -102,22 +103,23 @@ function Movie() {
       {/* Search Bar */}
       <div className="flex justify-between items-center mb-6  mt-7 lg:px-3">
 
-        <div className="flex items-center bg-white rounded-2xl px-2 h-10 lg:w-80">
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search movies..."
-            className="flex-1 px-2 outline-none"
-          />
-          <FaSearch />
+        <div className={`${openSearchBar ? "p-2 rounded-2xl" : "p-2.5 rounded-full"} flex justify-between items-center bg-white  lg:w-80`}>
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search movies..."
+              className={` ${openSearchBar ? "flex" : "hidden"} md:flex px-2 outline-none`}
+            />
+
+          <FaSearch className='cursor-pointer text-lg hover:text-gray-500 md:pointer-events-none' onClick={() => { setOpenSearchBar(!openSearchBar) }} />
         </div>
 
         <button
           onClick={handleStartVoting}
           className="bg-yellow-500 hover:bg-yellow-600 text-black px-5 py-2 rounded-xl font-semibold"
         >
-          Start Voting
+          { openSearchBar  ? "Vote"  : "Start Voting"}
         </button>
 
 
