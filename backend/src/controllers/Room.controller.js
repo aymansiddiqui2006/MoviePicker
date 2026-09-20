@@ -245,7 +245,7 @@ const participantReadyToVote = AsyncHandler(async (req, res) => {
 
   return res
     .status(200)
-    .json(new ApiRes(200, participant, "Voting finished successfully"));
+    .json(new ApiRes(200, participant, "Voting ready to vote!! status updated"));
 });
 
 const removeParticipant = AsyncHandler(async (req, res) => {
