@@ -6,7 +6,7 @@ import AsyncHandler from "../utils/AsyncHandler.js";
 import { Room } from "../models/Room.model.js";
 import { Participant } from "../models/Participant.model.js";
 
-import emitRoomUpdate from '../helper/emitChange.js'
+import emitRoomUpdate from "../helper/emitChange.js";
 import { io } from "../../app.js";
 
 const AddMovies = AsyncHandler(async (req, res) => {
@@ -181,19 +181,49 @@ const WinningMovie = AsyncHandler(async (req, res) => {
   );
 });
 
-const HostStartSelectingMovie = AsyncHandler(async (req,res)=>{
-  const {host,roomCode} = req.params;
+const HostStartSelectingMovie = AsyncHandler(async (req, res) => {
+  const { host, roomCode } = req.params;
 
   const room = await Room.find({
-    roomCode
-  })
+    roomCode,
+  });
 
-  if(!room){
-     throw new ApiError(400, "room nit found");
+  if (!room) {
+    throw new ApiError(400, "room nit found");
   }
-
-  
-
 });
 
-export { AddMovies, GetMovie, VoteMovie, WinningMovie };
+const removeSelectedMovie = AsyncHandler(async (req, res) => {
+  const { nickname, roomCode, movie } = req.params;
+
+  const room = await Room.findOne({
+    roomCode,
+  });
+
+  if (!room) {
+    throw new ApiError(400, "room not found");
+  }
+
+  const participant = await Participant.findOne({
+    room: room._id,
+    nickname,
+  });
+
+  if (!participant) {
+    throw new ApiError(400, "participant not found");
+  }
+
+  await Participant.findByIdAndUpdate(
+    participant._id,
+    {
+      $pull: {
+        moviesSelected: movie,
+      },
+    },
+    { new: true },
+  );
+
+  return res.status(200).json(new ApiRes(200, "Movie removed successfully"));
+});
+
+export { AddMovies, GetMovie, VoteMovie, WinningMovie , removeSelectedMovie };
