@@ -300,6 +300,8 @@ const removeParticipant = AsyncHandler(async (req, res) => {
     .json(new ApiRes(200, room, `${participantName} removed from the room`));
 });
 
+
+
 export {
   CreateRoom,
   JoinRoom,
