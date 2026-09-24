@@ -48,7 +48,7 @@ const AddMovies = AsyncHandler(async (req, res) => {
   }
 
   if (participant.moviesSelected.length >= 5) {
-    throw new ApiError(400, "You can only add 2 movies");
+    throw new ApiError(400, "You can only add 5 movies");
   }
 
   const addMovie = await Movie.create({
@@ -181,20 +181,20 @@ const WinningMovie = AsyncHandler(async (req, res) => {
   );
 });
 
-const HostStartSelectingMovie = AsyncHandler(async (req, res) => {
-  const { host, roomCode } = req.params;
+// const HostStartSelectingMovie = AsyncHandler(async (req, res) => {
+//   const { host, roomCode } = req.params;
 
-  const room = await Room.find({
-    roomCode,
-  });
+//   const room = await Room.find({
+//     roomCode,
+//   });
 
-  if (!room) {
-    throw new ApiError(400, "room nit found");
-  }
-});
+//   if (!room) {
+//     throw new ApiError(400, "room nit found");
+//   }
+// });
 
 const removeSelectedMovie = AsyncHandler(async (req, res) => {
-  const { nickname, roomCode, movie } = req.params;
+  const { nickname, roomCode, tmdbId } = req.params;
 
   const room = await Room.findOne({
     roomCode,
@@ -202,6 +202,10 @@ const removeSelectedMovie = AsyncHandler(async (req, res) => {
 
   if (!room) {
     throw new ApiError(400, "room not found");
+  }
+  
+  if(room.status!=="voting"){
+    throw new ApiError(400,"the room is not in movie selecting state")
   }
 
   const participant = await Participant.findOne({
@@ -213,15 +217,26 @@ const removeSelectedMovie = AsyncHandler(async (req, res) => {
     throw new ApiError(400, "participant not found");
   }
 
+  const movie = await Movie.findOne({
+    room:room._id,
+    tmdbId
+  })
+
+  if (!movie) {
+    throw new ApiError(404, "Movie not found");
+  }
+
   await Participant.findByIdAndUpdate(
     participant._id,
     {
       $pull: {
-        moviesSelected: movie,
+        moviesSelected: tmdbId,
       },
     },
     { new: true },
   );
+
+  await Movie.findByIdAndDelete(movie._id);
 
   return res.status(200).json(new ApiRes(200, "Movie removed successfully"));
 });
