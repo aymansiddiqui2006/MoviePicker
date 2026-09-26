@@ -23,6 +23,10 @@ const MovieSchama = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Participant",
   },
+  expiresAt: {
+    type: Date,
+    default: () => new Date(Date.now() + 60 * 60 * 1000),
+  },
 });
 
 MovieSchama.index(

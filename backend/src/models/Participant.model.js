@@ -30,6 +30,10 @@ const ParticipantSchema = mongoose.Schema(
         ref: "Movie",
       },
     ],
+    expiresAt: {
+      type: Date,
+      default: () => new Date(Date.now() + 60 * 60 * 1000),
+    },
   },
   { timestamps: true },
 );
