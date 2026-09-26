@@ -5,6 +5,7 @@ import cors from "cors";
 
 import roomRouter from "./src/routes/Room.route.js";
 import movieRouter from "./src/routes/movie.router.js";
+import participantRouter from "./src/routes/Participant.router.js"
 
 const app = express();
 const server = http.createServer(app);
@@ -34,6 +35,8 @@ app.use(
 app.use("/api/v1/room", roomRouter);
 
 app.use("/api/v1/movie", movieRouter);
+
+app.use("/api/v1/participant",participantRouter)
 
 app.use((err, req, res, next) => {
   res.status(err.statusCode || 500).json({

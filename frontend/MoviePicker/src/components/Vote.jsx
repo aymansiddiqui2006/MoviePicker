@@ -145,7 +145,8 @@ function Vote() {
         <p className="text-white text-2xl lg:text-3xl font-bold">
           Movie {currentIndex + 1} / {selectedMovie.length}
         </p>
-        <p className='text-white font-semibold text-sm lg:text-lg'>You one vote one movie</p>
+        <p className='text-white font-semibold text-sm lg:text-lg'>You can vote only one movie</p>
+        <p className='text-white font-semibold text-xs lg:text-sm'>You can't change once you vote movie</p>
 
       </div>
 

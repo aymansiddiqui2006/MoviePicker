@@ -4,6 +4,8 @@ import Modal from '../elements/Modal';
 import no_image from "../assets/no_image.png"
 import { useNavigate } from "react-router-dom";
 
+import { ImCheckboxChecked } from "react-icons/im";
+
 import { FaSearch } from "react-icons/fa";
 import RoomContext from '../context/RoomContext';
 
@@ -22,19 +24,13 @@ function Movie() {
   const [openSearchBar, setOpenSearchBar] = useState(false);
   const [searchedMovie, setSearchedMovie] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [selectedMovieLength, setSelectedMovieLength] = useState(0);
+  const [selectedMovie, setSelectedMovie] = useState([]);
 
   const [roomStatus, setRoomStatus] = useState("");
 
-  const { roomCode, nickname, isHost } = useContext(RoomContext);
+  const { roomCode, nickname } = useContext(RoomContext);
 
-  const options = {
-    method: "GET",
-    headers: {
-      accept: "application/json",
-      Authorization:
-        `Bearer ${import.meta.env.VITE_API_CODE}`,
-    },
-  };
 
   useEffect(() => {
     if (!search.trim()) {
@@ -80,6 +76,22 @@ function Movie() {
     };
   }, [navigate]);
 
+  const fetchSelectedMovie = async () => {
+    try {
+      const res = await api.get(ApiPaths.PARTICIPANT.GET_SELECTED_MOVIE(roomCode, nickname));
+
+      const movies = res.data?.data;
+
+      setSelectedMovie(movies);
+      setSelectedMovieLength(movies.length);
+
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to fetch selected movies");
+    }
+  }
+
+
+
   const handleStartVoting = async () => {
     try {
       const res = await api.patch(
@@ -96,6 +108,17 @@ function Movie() {
     }
   };
 
+  const handleRemoveFromSelected = async (tmdbId) => {
+    try {
+      await api.delete(ApiPaths.PARTICIPANT.REMOVE_SELECTED_MOVIE(roomCode, nickname, tmdbId));
+
+      fetchSelectedMovie();
+
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to delete selected movies");
+    }
+  }
+
 
   return (
     <div className="p-2 lg:px-8 flex flex-col gap-6">
@@ -104,25 +127,29 @@ function Movie() {
       <div className="flex justify-between items-center mb-6  mt-7 lg:px-3">
 
         <div className={`${openSearchBar ? "p-2 rounded-2xl" : "p-2.5 rounded-full"} flex justify-between items-center bg-white  lg:w-80`}>
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search movies..."
-              className={` ${openSearchBar ? "flex" : "hidden"} md:flex px-2 outline-none`}
-            />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search movies..."
+            className={` ${openSearchBar ? "flex" : "hidden"} md:flex px-2 outline-none`}
+          />
 
           <FaSearch className='cursor-pointer text-lg hover:text-gray-500 md:pointer-events-none' onClick={() => { setOpenSearchBar(!openSearchBar) }} />
         </div>
 
         <button
-          onClick={handleStartVoting}
+          onClick={() => setConfirmSelect(true)}
           className="bg-yellow-500 hover:bg-yellow-600 text-black px-5 py-2 rounded-xl font-semibold"
         >
-          { openSearchBar  ? "Vote"  : "Start Voting"}
+          {openSearchBar ? "Vote" : "Start Voting"}
         </button>
 
 
+      </div>
+
+      <div className='text-white font-medium flex justify-center md:justify-start md:text-lg'>
+        Total Movie Selected : {selectedMovieLength}/5
       </div>
 
 
@@ -225,14 +252,38 @@ function Movie() {
         <Modal
           movie={selectMovie}
           isClose={() => setSelectMovie(null)}
+          onMovieAdded={fetchSelectedMovie}
         />
       )}
 
       {
         confirmSelect && (
           <ConfirmModal title={"Movie Selected"} isClose={() => setConfirmSelect(false)}>
-            <div>
-              hello
+            <div className='flex flex-col gap-5'>
+              <div className=' font-medium flex justify-center md:justify-start '>
+                Total Movie Selected : {selectedMovieLength}/5
+              </div>
+              <div className='flex gap-3 overflow-x-scroll scrollbar-none p-3.5'>
+                {
+                  selectedMovie.map((movie) => (
+                    <div key={movie._id} className='relative h-42 min-w-[49%] md:h-48 md:min-w-[23%] lg:h-72'>
+                      <div className='absolute -right-1 -top-1 z-20'>
+                        <ImCheckboxChecked className='text-green-700 text-2xl cursor-pointer shadow-2xl hover:scale-90' onClick={() => handleRemoveFromSelected(movie.tmdbId)} />
+                      </div>
+                      <img
+                        src={
+                          movie.poster
+                        }
+                        alt={movie.original_title} className='object-fill h-full w-full rounded-xl' />
+                    </div>
+                  ))
+                }
+              </div>
+              {/* button */}
+              <div className='flex justify-end gap-2'>
+                <button className='bg-gray-400 rounded-xl py-0.5 px-2.5 hover:scale-90 cursor-pointer text-lg font-semibold' onClick={() => setConfirmSelect(false)}>Edit</button>
+                <button className='bg-yellow-500 rounded-xl py-0.5 px-2.5 hover:scale-90 cursor-pointer text-lg font-semibold' onClick={handleStartVoting}>Confirm</button>
+              </div>
             </div>
           </ConfirmModal>
         )

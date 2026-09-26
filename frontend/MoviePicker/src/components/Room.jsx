@@ -191,7 +191,7 @@ function Room() {
                                 ) : (
                                     <div className="w-5 h-5 rounded-full border-2 border-gray-400" />
                                 )}
-                                <div>{"("}{member.moviesSelected.length}/2{")"}</div>
+                                <div>{"("}{member.moviesSelected.length}/5{")"}</div>
                             </div>
                         </div>
                     ))}
@@ -286,11 +286,6 @@ function Room() {
             </div>
         )
     }
-    console.log("ROOM RENDER", {
-        roomStatus,
-        members,
-        membersLength: members.length,
-    });
     return (
         <div className='text-white flex flex-col items-center mt-5'>
             <div className="header flex flex-col gap-3">

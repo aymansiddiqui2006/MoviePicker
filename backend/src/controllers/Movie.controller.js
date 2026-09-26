@@ -193,52 +193,6 @@ const WinningMovie = AsyncHandler(async (req, res) => {
 //   }
 // });
 
-const removeSelectedMovie = AsyncHandler(async (req, res) => {
-  const { nickname, roomCode, tmdbId } = req.params;
 
-  const room = await Room.findOne({
-    roomCode,
-  });
 
-  if (!room) {
-    throw new ApiError(400, "room not found");
-  }
-  
-  if(room.status!=="voting"){
-    throw new ApiError(400,"the room is not in movie selecting state")
-  }
-
-  const participant = await Participant.findOne({
-    room: room._id,
-    nickname,
-  });
-
-  if (!participant) {
-    throw new ApiError(400, "participant not found");
-  }
-
-  const movie = await Movie.findOne({
-    room:room._id,
-    tmdbId
-  })
-
-  if (!movie) {
-    throw new ApiError(404, "Movie not found");
-  }
-
-  await Participant.findByIdAndUpdate(
-    participant._id,
-    {
-      $pull: {
-        moviesSelected: tmdbId,
-      },
-    },
-    { new: true },
-  );
-
-  await Movie.findByIdAndDelete(movie._id);
-
-  return res.status(200).json(new ApiRes(200, "Movie removed successfully"));
-});
-
-export { AddMovies, GetMovie, VoteMovie, WinningMovie , removeSelectedMovie };
+export { AddMovies, GetMovie, VoteMovie, WinningMovie };

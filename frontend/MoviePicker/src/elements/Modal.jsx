@@ -1,4 +1,4 @@
-import  { useContext } from 'react'
+import { useContext } from 'react'
 import { RxCross2 } from "react-icons/rx";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import api from "../utils/apiInstance"
@@ -10,7 +10,7 @@ import no_image from "../assets/no_image.png"
 import toast from 'react-hot-toast';
 
 
-function Modal({ isClose, movie }) {
+function Modal({ isClose, movie, onMovieAdded }) {
 
     const { nickname, roomCode } = useContext(RoomContext)
 
@@ -22,7 +22,8 @@ function Modal({ isClose, movie }) {
                 poster: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
                 title: movie.original_title
             }
-            const res = await api.post(ApiPaths.MOVIE.ADD_MOVIE(roomCode, nickname), data);
+            await api.post(ApiPaths.MOVIE.ADD_MOVIE(roomCode, nickname), data);
+            onMovieAdded()
             toast.success("movie Added")
         } catch (error) {
             toast.error(error?.response?.data?.message || "Something went wrong")
