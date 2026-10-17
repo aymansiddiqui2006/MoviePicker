@@ -1,4 +1,4 @@
-import  { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import no_image from "../assets/no_image.png"
 
@@ -35,8 +35,14 @@ function MovieCard({ title, endpoint, onMovieClick, category }) {
 
 
     return (
-        <div className='bg-gray-200/20 backdrop-blur-sm py-2 px-3 lg:px-5 rounded-xl flex flex-col shadow-md shadow-gray-700 border-2 border-gray-300'>
-            <h1 className='text-2xl font-bold'>{title}</h1>
+        <div className='bg-black/65 py-2 px-3 lg:px-5 rounded-xl flex flex-col shadow-lg shadow-gray-200/15'>
+
+            <div className='flex items-center justify-between'>
+                <h1 className='text-2xl font-bold text-white'>{title}</h1>
+
+                <h2 className='flex justify-end font-semibold text-white cursor-pointer hover:text-gray-400' onClick={() => navigate(`/movies/${category}`)}>View All →</h2>
+            </div>
+
             <div className='flex gap-4 overflow-x-scroll scrollbar-none mt-2 px-1 py-2 '>
                 {
                     movies.map((movie) => (
@@ -54,7 +60,6 @@ function MovieCard({ title, endpoint, onMovieClick, category }) {
                     ))
                 }
             </div>
-            <h2 className='flex justify-end font-semibold text-white cursor-pointer hover:text-gray-400' onClick={()=>navigate(`/movies/${category}`)}>View All →</h2>
         </div>
     )
 }
